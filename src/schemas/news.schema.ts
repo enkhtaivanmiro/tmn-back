@@ -13,4 +13,6 @@ export class News {
   createdAt: Date;
 }
 
+export type NewsDocument = HydratedDocument<News>;
+
 export const NewsSchema = SchemaFactory.createForClass(News);

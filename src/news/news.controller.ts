@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpException, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, NotFoundException } from '@nestjs/common';
 import { NewsService } from './news.service';
-import { PostNewsDto } from './dto/news.dto';
+import { EditNewsDto, PostNewsDto } from './dto/news.dto';
 import mongoose from 'mongoose';
 
 @Controller('news')
@@ -9,8 +9,7 @@ export class NewsController {
 
     @Post()
     postNews(@Body() postNewsDto: PostNewsDto) {
-        console.log(postNewsDto);
-        return this.newsService.postNews(postNewsDto)
+        return this.newsService.postNews(postNewsDto);
     }
 
     @Get()
@@ -20,12 +19,25 @@ export class NewsController {
 
     @Get(':id')
     async getNewsById(@Param('id') id: string) {
-        const isValid = mongoose.Types.ObjectId.isValid(id);
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new NotFoundException('News not found');
+        }
 
-        if(!isValid) throw new HttpException('News not found', 404)
-        const findNews = await this.newsService.findById(id);
-
-        if(!findNews) throw new HttpException('News Not Found', 404);
-        return findNews;
+        return this.newsService.findById(id);
     }
+
+    @Put(':id')
+    async editNewsById(
+        @Param('id') id: string,
+        @Body() editNewsDto: EditNewsDto
+    ) {
+        const { title, description } = editNewsDto;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new NotFoundException('News ID is invalid');
+        }
+
+        return this.newsService.editById(id, title, description);
+    }
+
 }
