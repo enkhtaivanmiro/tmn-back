@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { NewsService } from './news/news.service';
+import mongoose from 'mongoose';
 import { NewsModule } from './news/news.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:52848/?directConnection=true'), NewsModule],
-  controllers: [AppController],
-  providers: [AppService, NewsService],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017/tumen'),
+    NewsModule,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+}
