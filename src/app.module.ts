@@ -5,6 +5,8 @@ import { NewsModule } from './news/news.module';
 import { S3Service } from './s3/s3.service';
 import { S3Module } from './s3/s3.module';
 import { ConfigModule } from '@nestjs/config';
+import { ContactService } from './contact/contact.service';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -12,8 +14,9 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forRoot('mongodb://localhost:27017/tumen'),
     NewsModule,
     S3Module,
+    ContactModule,
   ],
-  providers: [S3Service],
+  providers: [S3Service, ContactService],
 })
 export class AppModule {
 }
